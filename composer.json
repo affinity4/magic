@@ -1,0 +1,19 @@
+{
+    "name": "affinity4/magic",
+    "description": "Magic Trait used to easily add event listeners, spelling suggestions in errors and Javascript __set and __get style setters an getters to any class. Magic!",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Luke Watts",
+            "email": "luke@affinity4.ie"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Affinity4\\Magic\\": "src/"
+        }
+    },
+    "require": {
+    }
+}
