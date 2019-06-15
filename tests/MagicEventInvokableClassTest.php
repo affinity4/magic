@@ -4,13 +4,14 @@ namespace Affinity4\Magic\Tests;
 use PHPUnit\Framework\TestCase;
 use Affinity4\Magic\Tests\Assert\Assertions;
 use Affinity4\Magic\Tests\Assets\MagicEvent;
+use Affinity4\Magic\Tests\Assets\InvokableEventHandler;
 use Affinity4\Magic\Magic;
 
 /**
  * @group MagicEventTest
- * @group MagicEventCallbacksTest
+ * @group MagicEventInvokableClassTest
  */
-class MagicEventCallbacksTest extends TestCase
+class MagicEventInvokableClassTest extends TestCase
 {
     use Assertions;
 
@@ -30,15 +31,9 @@ class MagicEventCallbacksTest extends TestCase
     public function testAddingEventHandlersAndTriggeringEvent()
     {
         $MagicEvent = new MagicEvent;
-        $MagicEvent->onSave[] = function($save) {
-            echo "$save 1\n";
-        };
-        $MagicEvent->onSave[] = function($save) {
-            echo "$save 2\n";
-        };
-        $MagicEvent->onSave[] = function($save) {
-            echo "$save 3\n";
-        };
+        $MagicEvent->onSave[] = new InvokableEventHandler(1);
+        $MagicEvent->onSave[] = new InvokableEventHandler(2);
+        $MagicEvent->onSave[] = new InvokableEventHandler(3);
 
         ob_start();
         $MagicEvent->onSave('Save');
