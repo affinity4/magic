@@ -165,13 +165,12 @@ trait Magic
       * __getMagicProperties
       *
       * Returns array of magic properties defined by annotation @property
-
-      @author Luke Watts <luke@affinity4.ie>
-     * 
-     * @since 1.0.0
+      * @author Luke Watts <luke@affinity4.ie>
+      * 
+      * @since 1.0.0
       *
       * @param string $class
-
+      *
       * @return array of [name => bit mask]
       */
 	public static function __getMagicProperties(string $class): array
@@ -316,13 +315,15 @@ trait Magic
 	 */
 	public function __call(string $name, array $args)
 	{
-		$class = get_class($this);
+        $class = get_class($this);
 
         // calling event handlers
 		if (self::__isEventProperty($class, $name)) {
 			if (is_iterable($this->$name)) {
 				foreach ($this->$name as $handler) {
-					$handler(...$args);
+                    if ($handler !== null) {
+                        $handler(...$args);
+                    }
 				}
 			} elseif ($this->$name !== null) {
 				throw new \Error("Property $class::$$name must be iterable or null, " . gettype($this->$name) . ' given.');
@@ -399,7 +400,7 @@ trait Magic
 	 */
 	public function __set(string $name, $value)
 	{
-		$class = get_class($this);
+        $class = get_class($this);
 
 		if (self::__hasProperty($class, $name)) {
 			$this->$name = $value;
