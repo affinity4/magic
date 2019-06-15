@@ -8,4 +8,4 @@ Magic Trait used to easily add event listeners, spelling suggestions in errors a
 composer require affinity4/magic
 ```
 
-See the [Wiki](./wiki) for this repo for documentation
+See the [Wiki](https://github.com/affinity4/magic/wiki) for this repo for documentation
