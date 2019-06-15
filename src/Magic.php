@@ -160,6 +160,22 @@ trait Magic
         
         throw new \Error("Call to undefined method $class::$method()" . ($hint ? ", did you mean $hint()?" : '.'));
     }
+
+    /**
+     * __snakeCaseToCamelCase
+     *
+     * @param string $name
+     * 
+     * @return string
+     */
+    private static function __snakeCaseToCamelCase(string $name): string
+    {
+        $name_chunks = explode('_', $name);
+
+        return implode('', array_map(function($name) {
+            return ucFirst($name);
+        }, $name_chunks));
+    }
     
      /**
       * __getMagicProperties
@@ -189,17 +205,19 @@ trait Magic
 
         $props = [];
         foreach ($matches as [, $type, $name]) {
-            $name_chunks = explode('_', $name);
-            $uname = implode('', array_map(function($name) {
-                return ucFirst($name);
-            }, $name_chunks));
-            $write = (
-                $type !== '-read'
-                && $rc->hasMethod($nm = 'set' . $uname)
-                && ($rm = $rc->getMethod($nm))
-                && $rm->getName() === $nm
-                && !$rm->isPrivate() && !$rm->isStatic()
-            );
+            $uname = self::__snakeCaseToCamelCase($name);
+            $hasWriteProperty = function($type, $rc, $uname)
+            {
+                $setMethod = 'set' . $uname;
+                return (
+                    $type !== '-read'
+                    && $rc->hasMethod($setMethod)
+                    && ($rm = $rc->getMethod($setMethod))
+                    && $rm->getName() === $setMethod
+                    && !$rm->isPrivate() && !$rm->isStatic()
+                );
+            };
+            $write = $hasWriteProperty($type, $rc, $uname);
             $read = (
                 $type !== '-write'
                 && ($rc->hasMethod($nm = 'get' . $uname) || $rc->hasMethod($nm = 'is' . $uname))
@@ -207,20 +225,13 @@ trait Magic
                 && $rm->getName() === $nm
                 && !$rm->isPrivate()
                 && !$rm->isStatic()
-            );
+            );;
 
             if ($read || $write) {
                 $props[$name] = $read << 0 | ($nm[0] === 'g') << 1 | $rm->returnsReference() << 2 | $write << 3;
             } else {
                 $uname = ucfirst($name);
-
-                $write = (
-                    $type !== '-read'
-                    && $rc->hasMethod($nm = 'set' . $uname)
-                    && ($rm = $rc->getMethod($nm))
-                    && $rm->getName() === $nm
-                    && !$rm->isPrivate() && !$rm->isStatic()
-                );
+                $write = $hasWriteProperty($type, $rc, $uname);
                 $read = (
                     $type !== '-write'
                     && ($rc->hasMethod($nm = 'get' . $uname) || $rc->hasMethod($nm = 'is' . $uname))
@@ -410,10 +421,7 @@ trait Magic
             }
             
             if (preg_match('/_/', $name) === 1) {
-                $name_chunks = explode('_', $name);
-                $name = implode('', array_map(function($name) {
-                    return ucFirst($name);
-                }, $name_chunks));
+                $name = self::__snakeCaseToCamelCase($name);
             }
             
             $m = ($prop & 0b0010 ? 'get' : 'is') . $name;
@@ -453,10 +461,7 @@ trait Magic
             }
 
             if (preg_match('/_/', $name) === 1) {
-                $name_chunks = explode('_', $name);
-                $name = implode('', array_map(function($name) {
-                    return ucFirst($name);
-                }, $name_chunks));
+                $name = self::__snakeCaseToCamelCase($name);
             }
             
             $this->{'set' . $name}($value);
