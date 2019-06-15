@@ -14,6 +14,11 @@
             "Affinity4\\Magic\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Affinity4\\Magic\\Tests\\": "tests/"
+        }
+    },
     "require": {
     },
     "require-dev": {
