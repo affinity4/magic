@@ -234,9 +234,11 @@ Another enhancement the Magic trait gives you is the ability to ensure setter an
 
 Consider this academic example of a user account on a platform like StackOverflow. You have an account with reputation points. There is an event to be called once the user gets to the next "level" and gains access to new features, and so other events can be fired, like emailing them or moderators etc. 
 
-The mistake here is that the `$reputation` property has been set to public, allowing the events to be bypassed by mistake.
+__IMPORTANT: There is a big mistake here! The mistake here is that the `$reputation` property has been set to public, allowing the events to be bypassed by mistake.__
 
-let's take a look at an example of this system being used correctly:
+Let's take a look at an example of this mistake. 
+
+Note the lack of `@property` docblock attributes on the `UserAccount` class, and that `$reputation` and `$level` are both public:
 
 ```php
 require_once __DIR__ . '/vendor/autoload.php';
