@@ -694,6 +694,6 @@ Internally, the invoke methods will be used and passed in our the `$Opponent` in
 
 ## TODO
 
-- Use Attributes instead of magic set/get
+- Use PHP 8 Attributes instead of magic set/get
 - Improve examples to use PSR compliant container examples
 
