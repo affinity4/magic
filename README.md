@@ -23,7 +23,8 @@ class User extends Model
 {
     public function register(string $username, string $email, string $password)
     {
-        // ... saves to `users` table
+        // ...save data to `users` table
+
         echo "New user saved to `users` table\n";
     }
 }
@@ -38,7 +39,7 @@ use Affinity4\Magic\Magic;
 
 class User extends Model
 {
-    trait Magic;
+    use Magic;
 
     /**
      * @var array
