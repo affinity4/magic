@@ -691,3 +691,9 @@ $Highlander->kill($Opponent);
 ```
 
 Internally, the invoke methods will be used and passed in our the `$Opponent` instance from the `kill()` method
+
+## TODO
+
+- Use Attributes instead of magic set/get
+- Improve examples to use PSR compliant container examples
+
